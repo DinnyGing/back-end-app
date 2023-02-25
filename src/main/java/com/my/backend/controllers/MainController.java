@@ -37,16 +37,6 @@ public class MainController {
     }
     @PostMapping("/login")
     public User login(@RequestBody User user, HttpServletResponse response) {
-//        if (userRepository.checkLogin(user.getLogin()).isEmpty()) {
-//            return "That user`s login isn`t correct or you don`t register";
-//        } else {
-//
-//            else
-//                return "Password isn`t correct";
-//        }
-//        if(userRepository.checkLogin(user.getLogin()).get(0).getPassword().equals(user.getPassword())) {
-//
-//        }
         if (userRepository.checkLogin(user.getLogin()).isEmpty())
             return new User();
         else {

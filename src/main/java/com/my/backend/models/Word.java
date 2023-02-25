@@ -49,6 +49,7 @@ public class Word {
         this.url_photo_word = url_photo_word;
     }
 
+
     public Long getId() {
         return id;
     }

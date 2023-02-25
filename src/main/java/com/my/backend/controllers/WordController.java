@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/tags/{id}/words")
+@RequestMapping("{id_user}/tags/{id}/words")
+@CrossOrigin
 public class WordController {
 
     private final WordRepository wordRepository;
@@ -87,6 +90,27 @@ public class WordController {
         tag.setLikesTag(words);
         tagRepository.save(tag);
         return "Word is edited";
+    }
+    @PostMapping("/{id_word}/learn")
+    public String learnWord(@PathVariable("id") Long id_tag, @PathVariable("id_word") Long id_word){
+        Word word = wordRepository.getById(id_word);
+        word.setStatus(WordStatus.LEARNING.toString());
+        Tag tag = tagRepository.findById(id_tag).get();
+        Set<Word> words = tag.getLikesTag();
+        Set<Tag> tags = word.getLikedTag();
+        if(tags == null)
+            tags = new HashSet<>();
+        tags.add(tag);
+        tags.stream().forEach(e -> e.setStatus(WordStatus.LEARNING.toString()));
+        word.setLikedTag(tags);
+        wordRepository.save(word);
+        if(words == null)
+            words = new HashSet<>();
+        words.add(word);
+        tag.setLikesTag(words);
+        tag.setStatus(WordStatus.LEARNING.toString());
+        tagRepository.saveAll(tags);
+        return word.getName() + " is " + word.getStatus();
     }
     @PostMapping("/{id_word}/delete")
     public String deleteWord(@PathVariable("id_word") Long id_word){
